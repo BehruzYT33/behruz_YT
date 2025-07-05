@@ -4,27 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Летние Каникулы | Расписание</title>
+    <!-- Иконка сайта (favicon) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛵</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         :root {
-            --primary: #4361ee;
-            --secondary: #3a0ca3;
+            --primary: #2563eb; /* Более яркий синий */
+            --secondary: #1d4ed8; /* Яркий темно-синий */
             --accent: #ff006e;
             --light: #f8f9fa;
             --dark: #212529;
-            --success: #4cc9f0;
-            --warning: #ffbe0b;
-            --dark-blue: #1a2a4a;
-            --gold: #ffd700;
-            --now: #ff4757;
-            --holiday: #6c757d;
-            --sand: #f8f4e5;
+            --success: #00b4d8; /* Яркий бирюзовый */
+            --warning: #fbbf24; /* Яркий желтый */
+            --dark-blue: #1e40af; /* Очень яркий синий */
+            --gold: #facc15; /* Яркое золото */
+            --now: #ef4444; /* Яркий красный */
+            --holiday: #64748b;
+            --sand: #fef3c7; /* Яркий песочный */
+            --current-day: rgba(37, 99, 235, 0.15); /* Более заметный */
         }
         
         body {
             font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, var(--sand), #e2d5b8);
+            background: linear-gradient(135deg, var(--sand), #fde68a);
             min-height: 100vh;
             margin: 0;
             padding: 20px;
@@ -40,13 +43,14 @@
             max-width: 800px;
             background: white;
             border-radius: 20px;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
             overflow: hidden;
             position: relative;
+            border: 2px solid var(--primary); /* Добавим синюю рамку */
         }
         
         .header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--primary), var(--dark-blue));
             color: white;
             padding: 30px;
             text-align: center;
@@ -61,7 +65,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="rgba(255,255,255,0.05)" width="50" height="50" x="0" y="0"></rect></svg>');
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="rgba(255,255,255,0.1)" width="50" height="50" x="0" y="0"></rect></svg>');
         }
         
         .title {
@@ -71,7 +75,7 @@
             font-weight: 700;
             color: white;
             position: relative;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
         
         .subtitle {
@@ -90,23 +94,19 @@
         }
         
         .time-badge {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.3);
             padding: 8px 20px;
             border-radius: 50px;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
         
         .time-value {
             font-family: 'Courier New', monospace;
             font-weight: 700;
-        }
-        
-        .tz-label {
-            font-size: 0.8em;
-            opacity: 0.9;
         }
         
         .controls {
@@ -118,8 +118,8 @@
         }
         
         .control-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.5);
             color: white;
             padding: 8px 20px;
             border-radius: 50px;
@@ -132,7 +132,8 @@
         }
         
         .control-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
         }
         
         .schedule-content {
@@ -143,35 +144,63 @@
             margin-bottom: 25px;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             border-left: 5px solid var(--primary);
             background: white;
+            position: relative;
+        }
+        
+        .schedule-day.current-day {
+            animation: pulseGlow 2s infinite;
+            border-left: 5px solid var(--gold);
         }
         
         .schedule-day:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
         
         .day-header {
             padding: 15px 20px;
-            background: linear-gradient(to right, rgba(67, 97, 238, 0.1), rgba(67, 97, 238, 0.05));
+            background: linear-gradient(to right, rgba(37, 99, 235, 0.2), rgba(37, 99, 235, 0.1));
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .day-header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--current-day);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .schedule-day.current-day .day-header::after {
+            opacity: 1;
         }
         
         .day-name {
             font-weight: 700;
             font-size: 1.2rem;
-            color: var(--secondary);
+            color: var(--dark-blue);
+            position: relative;
+            z-index: 1;
         }
         
         .date {
             font-weight: 600;
             color: var(--dark);
+            position: relative;
+            z-index: 1;
         }
         
         .day-content {
@@ -183,6 +212,11 @@
             display: flex;
             align-items: center;
             padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .event:last-child {
+            border-bottom: none;
         }
         
         .event-time {
@@ -190,6 +224,7 @@
             font-weight: 700;
             color: var(--primary);
             font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
         }
         
         .event-title {
@@ -198,18 +233,20 @@
         }
         
         .event-status {
-            padding: 4px 12px;
+            padding: 6px 12px;
             border-radius: 50px;
             font-size: 0.8rem;
             font-weight: 700;
             min-width: 100px;
             text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .live {
             background-color: var(--now);
             color: white;
-            animation: pulse 2s infinite;
+            animation: pulse 1.5s infinite;
         }
         
         .postponed {
@@ -233,24 +270,24 @@
             right: 30px;
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--primary), var(--dark-blue));
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
             cursor: pointer;
             z-index: 100;
             transition: all 0.3s ease;
         }
         
         .voice-assistant:hover {
-            transform: scale(1.1);
-            box-shadow: 0 15px 40px rgba(67, 97, 238, 0.4);
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 15px 40px rgba(37, 99, 235, 0.5);
         }
         
         .voice-assistant.muted {
-            background: linear-gradient(135deg, #6c757d, #495057);
+            background: linear-gradient(135deg, #64748b, #475569);
         }
         
         .assistant-icon {
@@ -281,9 +318,15 @@
         }
         
         @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 71, 87, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 15px rgba(37, 99, 235, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(37, 99, 235, 0.6); }
+            100% { box-shadow: 0 0 15px rgba(37, 99, 235, 0.3); }
         }
         
         .beach-icon {
@@ -292,9 +335,9 @@
             left: 0;
             width: 100%;
             height: 60px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="%23ffd700"></path><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="%23ffd700"></path><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%23ffd700"></path></svg>');
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="%23facc15"></path><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="%23facc15"></path><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%23facc15"></path></svg>');
             background-size: cover;
-            opacity: 0.3;
+            opacity: 0.4;
         }
         
         .hidden-day {
@@ -336,7 +379,6 @@
                 <div class="time-badge">
                     <span id="current-date">5 июля, суббота</span>
                     <span class="time-value" id="current-time">22:07</span>
-                    <span class="tz-label">ТШК</span>
                 </div>
             </div>
             
@@ -361,14 +403,14 @@
         
         <div class="schedule-content">
             <!-- Сегодня 5 июля -->
-            <div class="schedule-day animate__animated animate__fadeIn" id="day-5">
+            <div class="schedule-day animate__animated animate__fadeIn current-day" id="day-5">
                 <div class="day-header">
                     <span class="day-name">Суббота</span>
                     <span class="date">5 июля</span>
                 </div>
                 <div class="day-content">
                     <div class="event">
-                        <span class="event-time">10:00 ТШК</span>
+                        <span class="event-time">10:00</span>
                         <span class="event-title">Летние каникулы: Круиз</span>
                         <span class="event-status postponed">Перенос на 6 июля</span>
                     </div>
@@ -383,7 +425,7 @@
                 </div>
                 <div class="day-content">
                     <div class="event">
-                        <span class="event-time">10:00 ТШК</span>
+                        <span class="event-time">10:00</span>
                         <span class="event-title">Летние каникулы: Круиз</span>
                         <span class="event-status upcoming">Скоро</span>
                     </div>
@@ -413,7 +455,7 @@
                 </div>
                 <div class="day-content">
                     <div class="event">
-                        <span class="event-time">10:00 ТШК</span>
+                        <span class="event-time">10:00</span>
                         <span class="event-title">Город Липси</span>
                         <span class="event-status upcoming">Скоро</span>
                     </div>
@@ -443,7 +485,7 @@
                 </div>
                 <div class="day-content">
                     <div class="event">
-                        <span class="event-time">10:00 ТШК</span>
+                        <span class="event-time">10:00</span>
                         <span class="event-title">Летние каникулы: 3 сезон</span>
                         <span class="event-status upcoming">Скоро</span>
                     </div>
@@ -476,6 +518,34 @@
             document.getElementById('current-time').textContent = 
                 tashkentTime.toLocaleTimeString('ru-RU', timeOptions);
             document.getElementById('current-date').textContent = dateStr;
+            
+            // Проверяем, наступила ли полночь по ташкентскому времени
+            if (tashkentTime.getHours() === 0 && tashkentTime.getMinutes() === 0) {
+                updateCurrentDay();
+            }
+        }
+        
+        // Обновляем текущий день
+        function updateCurrentDay() {
+            const now = new Date();
+            const tashkentOffset = 5 * 60 * 60 * 1000;
+            const tashkentTime = new Date(now.getTime() + tashkentOffset);
+            const currentDate = tashkentTime.getDate();
+            
+            // Убираем выделение у всех дней
+            document.querySelectorAll('.schedule-day').forEach(day => {
+                day.classList.remove('current-day');
+            });
+            
+            // Находим день с текущей датой и добавляем ему класс current-day
+            const days = document.querySelectorAll('.schedule-day');
+            for (let day of days) {
+                const dateElement = day.querySelector('.date');
+                if (dateElement && dateElement.textContent.includes(currentDate + ' июля')) {
+                    day.classList.add('current-day');
+                    break;
+                }
+            }
         }
         
         // Озвучка расписания
@@ -489,12 +559,12 @@
                 const utterance = new SpeechSynthesisUtterance();
                 
                 utterance.text = `
-                    Сегодня 5 июля: Летние каникулы Круиз перенесены на завтра в 10 утра по Ташкентскому времени. 
-                    Завтра 6 июля смотрите Летние каникулы Круиз в 10:00 ТШК. 
+                    Сегодня 5 июля: Летние каникулы Круиз перенесены на завтра в 10 утра. 
+                    Завтра 6 июля смотрите Летние каникулы Круиз в 10:00. 
                     7 июля - выходной день. 
-                    8 июля в 10:00 ТШК - Город Липси. 
+                    8 июля в 10:00 - Город Липси. 
                     9 июля - выходной. 
-                    10 июля в 10:00 ТШК - премьера 3 сезона Летних каникул.
+                    10 июля в 10:00 - премьера 3 сезона Летних каникул.
                 `;
                 
                 // Настройки голоса
@@ -588,6 +658,9 @@
             // Настройка переключателей
             setupDayToggle();
             setupAudioToggle();
+            
+            // Определяем текущий день
+            updateCurrentDay();
             
             // Автоматическая озвучка через 3 секунды
             setTimeout(() => {
