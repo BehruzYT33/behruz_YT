@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Летние Каникулы | Участники</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #1d4ed8;
+            --dark-blue: #1e40af;
+            --sand: #fef3c7;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--sand), #fde68a);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: var(--dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .members-container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 30px;
+            border: 2px solid var(--primary);
+        }
+        
+        .members-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .members-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--dark-blue);
+            margin: 0 0 10px;
+        }
+        
+        .members-subtitle {
+            font-size: 1.1rem;
+            color: var(--dark);
+            opacity: 0.8;
+        }
+        
+        .members-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .member {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: rgba(37, 99, 235, 0.05);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .member-name {
+            font-weight: 600;
+            font-size: 1.2rem;
+            flex: 1;
+        }
+        
+        .member-role {
+            background: var(--primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .members-total {
+            margin-top: 25px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--dark-blue);
+        }
+        
+        @media (max-width: 768px) {
+            .members-title {
+                font-size: 2rem;
+            }
+            
+            .member {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .member-role {
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="members-container">
+        <div class="members-header">
+            <h1 class="members-title">Участники канала</h1>
+            <p class="members-subtitle">Команда "Летние Каникулы"</p>
+        </div>
+        
+        <div class="members-list">
+            <div class="member">
+                <div class="member-name">Бехруз</div>
+                <div class="member-role">Создатель</div>
+            </div>
+            
+            <div class="member">
+                <div class="member-name">Валерка</div>
+                <div class="member-role">Монтажёр</div>
+            </div>
+            
+            <div class="member">
+                <div class="member-name">Полина</div>
+                <div class="member-role">Помощница монтажёра</div>
+            </div>
+        </div>
+        
+        <div class="members-total">Всего: 3 участника</div>
+    </div>
+</body>
+</html>
